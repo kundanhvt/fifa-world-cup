@@ -1,0 +1,9 @@
+{
+	"name": "common-adf-hvt",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "bb3ff09d-cf5d-41f6-a559-97692071da3f",
+		"tenantId": "7359f896-71e2-4dae-b8a3-15cdf97f2f10"
+	}
+}
