@@ -13,7 +13,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          date as string,",
@@ -36,7 +40,12 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> fifaworldcupinput"
+				"     ignoreNoFilesFound: false) ~> fifaworldcupinput",
+				"fifaworldcupinput aggregate(groupBy(home_team),",
+				"     total = count(home_team),",
+				"          win = count(home_team_result==\"Win\"),",
+				"          loose = count(home_team_result==\"Lose\"),",
+				"          draw = count(home_team_result==\"Draw\")) ~> aggregate1"
 			]
 		}
 	}
