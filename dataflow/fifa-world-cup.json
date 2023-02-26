@@ -16,6 +16,22 @@
 			"transformations": [
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "filter1",
+					"description": "Add expression for the filter"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "filter3"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "aggregate3"
 				}
 			],
 			"scriptLines": [
@@ -41,11 +57,15 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> fifaworldcupinput",
-				"fifaworldcupinput aggregate(groupBy(home_team),",
-				"     total = count(home_team),",
-				"          win = count(home_team_result==\"Win\"),",
-				"          loose = count(home_team_result==\"Lose\"),",
-				"          draw = count(home_team_result==\"Draw\")) ~> aggregate1"
+				"filter1 aggregate(groupBy(home_team),",
+				"     total_win = count(home_team)) ~> aggregate1",
+				"fifaworldcupinput filter(home_team_result==\"Win\") ~> filter1",
+				"fifaworldcupinput filter(home_team_result==\"Lose\") ~> filter2",
+				"fifaworldcupinput filter(home_team_result==\"Draw\") ~> filter3",
+				"filter2 aggregate(groupBy(home_team),",
+				"     total_lose = count(home_team_result)) ~> aggregate2",
+				"filter3 aggregate(groupBy(home_team),",
+				"     total_draw = count(home_team_result)) ~> aggregate3"
 			]
 		}
 	}
