@@ -1,0 +1,93 @@
+{
+	"name": "madhurinputdataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "madhurlinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "international_matches.csv",
+				"folderPath": "input",
+				"container": "madhuradfdemo"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "String"
+			},
+			{
+				"name": "home_team",
+				"type": "String"
+			},
+			{
+				"name": "away_team",
+				"type": "String"
+			},
+			{
+				"name": "home_team_continent",
+				"type": "String"
+			},
+			{
+				"name": "away_team_continent",
+				"type": "String"
+			},
+			{
+				"name": "home_team_fifa_rank",
+				"type": "String"
+			},
+			{
+				"name": "away_team_fifa_rank",
+				"type": "String"
+			},
+			{
+				"name": "home_team_total_fifa_points",
+				"type": "String"
+			},
+			{
+				"name": "away_team_total_fifa_points",
+				"type": "String"
+			},
+			{
+				"name": "home_team_score",
+				"type": "String"
+			},
+			{
+				"name": "away_team_score",
+				"type": "String"
+			},
+			{
+				"name": "tournament",
+				"type": "String"
+			},
+			{
+				"name": "city",
+				"type": "String"
+			},
+			{
+				"name": "country",
+				"type": "String"
+			},
+			{
+				"name": "neutral_location",
+				"type": "String"
+			},
+			{
+				"name": "shoot_out",
+				"type": "String"
+			},
+			{
+				"name": "home_team_result",
+				"type": "String"
+			}
+		]
+	}
+}

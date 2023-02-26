@@ -1,0 +1,86 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "madhurinputdataset",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "homewin1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "homoloss2"
+				},
+				{
+					"name": "awaywin"
+				},
+				{
+					"name": "homeloss"
+				},
+				{
+					"name": "homedraw"
+				},
+				{
+					"name": "homedraw1"
+				},
+				{
+					"name": "awaydraw1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 filter(home_team_result==\"Draw\") ~> homewin1",
+				"homewin1 aggregate(groupBy(home_team),",
+				"     homewincount = count(home_team)) ~> aggregate1",
+				"homewin1 aggregate(groupBy(away_team),",
+				"     awaywincount = count(away_team)) ~> aggregate2",
+				"source1 filter(home_team_result==\"Lose\") ~> homoloss2",
+				"homoloss2 aggregate(groupBy(away_team),",
+				"     total_win = count(away_team)) ~> awaywin",
+				"homoloss2 aggregate(groupBy(home_team),",
+				"     total_lose = count(home_team)) ~> homeloss",
+				"source1 filter(home_team_result==\"Draw\") ~> homedraw",
+				"homedraw aggregate(groupBy(home_team),",
+				"     home_loss = count(home_team)) ~> homedraw1",
+				"homedraw aggregate(groupBy(away_team),",
+				"     away_draw = count(away_team)) ~> awaydraw1"
+			]
+		}
+	}
+}
