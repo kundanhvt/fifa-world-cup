@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "TotalDrawlDataset",
+						"type": "DatasetReference"
+					},
+					"name": "totaldraw"
+				}
+			],
 			"transformations": [
 				{
 					"name": "homewin1"
@@ -43,6 +51,12 @@
 				},
 				{
 					"name": "finaldraw"
+				},
+				{
+					"name": "drawfinal"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -67,7 +81,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     limit: 100,",
+				"     limit: 25000,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 filter(home_team_result==\"Draw\") ~> homewin1",
 				"homewin1 aggregate(groupBy(home_team),",
@@ -87,14 +101,42 @@
 				"     broadcast: 'auto')~> join1",
 				"join1 derive(total_draw = iif( isNull(home_draw), 0l , home_draw) + iif( isNull(away_draw), 0l , away_draw)) ~> derivedColumn1",
 				"derivedColumn1 select(mapColumn(",
-				"          away_team,",
-				"          away_draw,",
 				"          final_draw = home_team,",
-				"          home_draw,",
+				"          total_draw,",
+				"          away_team",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> finaldraw",
+				"finaldraw derive(draw_final = iif(isNull(final_draw), away_team, final_draw)) ~> drawfinal",
+				"drawfinal select(mapColumn(",
+				"          draw_final,",
 				"          total_draw",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> finaldraw"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> totaldraw"
 			]
 		}
 	}
