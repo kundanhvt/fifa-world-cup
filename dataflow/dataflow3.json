@@ -1,0 +1,108 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "madhurinputdataset",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "HomeTeamPerformanceDataset",
+						"type": "DatasetReference"
+					},
+					"name": "HomeTeamPerformanceSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate2"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "aggregate3"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as date,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as short,",
+				"          away_team_fifa_rank as short,",
+				"          home_team_total_fifa_points as boolean,",
+				"          away_team_total_fifa_points as boolean,",
+				"          home_team_score as short,",
+				"          away_team_score as short,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as boolean,",
+				"          shoot_out as boolean,",
+				"          home_team_result as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 25000,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 aggregate(groupBy(home_team),",
+				"     total_played = count(home_team)) ~> aggregate2",
+				"source1 filter(home_team_result==\"Win\") ~> filter1",
+				"filter1 aggregate(groupBy(home_team),",
+				"     total_win = count(home_team)) ~> aggregate3",
+				"aggregate3, aggregate2 join(aggregate3@home_team == aggregate2@home_team,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          home_team = aggregate3@home_team,",
+				"          total_played,",
+				"          total_win",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> HomeTeamPerformanceSink"
+			]
+		}
+	}
+}
