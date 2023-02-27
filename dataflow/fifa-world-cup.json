@@ -136,7 +136,8 @@
 				"     ),",
 				"     partitionFileNames:['team_output.csv'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> output"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> output"
 			]
 		}
 	}
