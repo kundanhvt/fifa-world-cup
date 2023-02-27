@@ -19,14 +19,28 @@
 						"type": "DatasetReference"
 					},
 					"name": "totaldraw"
+				},
+				{
+					"dataset": {
+						"referenceName": "TotalLossDataset",
+						"type": "DatasetReference"
+					},
+					"name": "finallosssink"
+				},
+				{
+					"dataset": {
+						"referenceName": "TotalWinDataset",
+						"type": "DatasetReference"
+					},
+					"name": "finalwinsink"
 				}
 			],
 			"transformations": [
 				{
-					"name": "homewin1"
+					"name": "homewin"
 				},
 				{
-					"name": "aggregate2"
+					"name": "homewin11"
 				},
 				{
 					"name": "homoloss2"
@@ -57,6 +71,30 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "awaywin"
+				},
+				{
+					"name": "awayloss"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "join3"
+				},
+				{
+					"name": "totalloses"
+				},
+				{
+					"name": "lossfinal"
+				},
+				{
+					"name": "totalwins"
+				},
+				{
+					"name": "winsfinal"
 				}
 			],
 			"scriptLines": [
@@ -83,12 +121,12 @@
 				"     validateSchema: false,",
 				"     limit: 25000,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 filter(home_team_result==\"Draw\") ~> homewin1",
-				"homewin1 aggregate(groupBy(home_team),",
-				"     homewincount = count(home_team)) ~> aggregate2",
+				"source1 filter(home_team_result==\"Draw\") ~> homewin",
+				"homewin aggregate(groupBy(home_team),",
+				"     homewincount = count(home_team)) ~> homewin11",
 				"source1 filter(home_team_result==\"Lose\") ~> homoloss2",
 				"homoloss2 aggregate(groupBy(home_team),",
-				"     total_lose = count(home_team)) ~> homeloss",
+				"     home_loss = count(home_team)) ~> homeloss",
 				"source1 filter(home_team_result==\"Draw\") ~> homedraw",
 				"homedraw aggregate(groupBy(home_team),",
 				"     home_draw = count(home_team)) ~> homedraw1",
@@ -114,6 +152,34 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"homoloss2 aggregate(groupBy(away_team),",
+				"     awaywin = count(away_team)) ~> awaywin",
+				"homewin aggregate(groupBy(away_team),",
+				"     awayloss = count(away_team)) ~> awayloss",
+				"awaywin, homewin11 join(away_team == home_team,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"homeloss, awayloss join(home_team == away_team,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join3",
+				"join3 derive(total_loss = home_loss+awayloss) ~> totalloses",
+				"totalloses select(mapColumn(",
+				"          home_team,",
+				"          total_loss",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> lossfinal",
+				"join2 derive(total_win = awaywin+homewincount) ~> totalwins",
+				"totalwins select(mapColumn(",
+				"          home_team,",
+				"          total_win",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> winsfinal",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -136,7 +202,53 @@
 				"          home_team_result as string",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> totaldraw"
+				"     skipDuplicateMapOutputs: true) ~> totaldraw",
+				"lossfinal sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> finallosssink",
+				"winsfinal sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> finalwinsink"
 			]
 		}
 	}
