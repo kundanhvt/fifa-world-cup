@@ -1,5 +1,5 @@
 {
-	"name": "TotalDrawlDataset",
+	"name": "WinLossDrawOutputDataset",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "madhurlinkedservice",

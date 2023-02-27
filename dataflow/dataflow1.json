@@ -12,13 +12,45 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "WinLossDrawOutputDataset",
+						"type": "DatasetReference"
+					},
+					"name": "WinLossDraw"
+				}
+			],
 			"transformations": [
 				{
-					"name": "sort1"
+					"name": "homedraw"
 				},
 				{
-					"name": "filter1"
+					"name": "homeloss"
+				},
+				{
+					"name": "homewin"
+				},
+				{
+					"name": "homewinagg"
+				},
+				{
+					"name": "homelossagg"
+				},
+				{
+					"name": "homedrawagg"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -45,9 +77,50 @@
 				"     validateSchema: false,",
 				"     limit: 25000,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 sort(asc(home_team, true),",
-				"     caseInsensitive: true) ~> sort1",
-				"sort1 filter(home_team==\"Bolivia\") ~> filter1"
+				"source1 filter(home_team_result==\"Draw\") ~> homedraw",
+				"source1 filter(home_team_result==\"Lose\") ~> homeloss",
+				"source1 filter(home_team_result==\"Win\") ~> homewin",
+				"homewin aggregate(groupBy(home_team),",
+				"     total_win = count(home_team)) ~> homewinagg",
+				"homeloss aggregate(groupBy(home_team),",
+				"     total_loss = count(home_team_result)) ~> homelossagg",
+				"homedraw aggregate(groupBy(home_team),",
+				"     total_draw = count(home_team_result)) ~> homedrawagg",
+				"homedrawagg, homelossagg join(homedrawagg@home_team == homelossagg@home_team,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(home_team = iif(isNull(homedrawagg@home_team), homelossagg@home_team, homedrawagg@home_team)) ~> derivedColumn1",
+				"derivedColumn1, homewinagg join(derivedColumn1@home_team == homewinagg@home_team,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 derive(home_team = iif(isNull(derivedColumn1@home_team), homewinagg@home_team, derivedColumn1@home_team)) ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> WinLossDraw"
 			]
 		}
 	}
