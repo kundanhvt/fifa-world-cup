@@ -15,10 +15,6 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Data flow1').output.pipelineReturnValue",
-						"type": "Expression"
-					},
 					"batchCount": 1,
 					"activities": [
 						{

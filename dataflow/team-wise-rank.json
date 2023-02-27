@@ -59,10 +59,12 @@
 				"select1 sink(validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     keys:['home_team'],",
 				"     store: 'cache',",
 				"     format: 'inline',",
 				"     output: false,",
-				"     saveOrder: 1) ~> sink1"
+				"     saveOrder: 1,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
