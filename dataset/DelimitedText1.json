@@ -1,0 +1,41 @@
+{
+	"name": "DelimitedText1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "kundan_storage_adf_linked_services",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "team_output.csv",
+				"folderPath": "output",
+				"container": "kundan"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "home_team",
+				"type": "String"
+			},
+			{
+				"name": "total_lose",
+				"type": "String"
+			},
+			{
+				"name": "total_draw",
+				"type": "String"
+			},
+			{
+				"name": "total_win",
+				"type": "String"
+			}
+		]
+	}
+}
