@@ -18,16 +18,10 @@
 					"name": "homewin1"
 				},
 				{
-					"name": "aggregate1"
-				},
-				{
 					"name": "aggregate2"
 				},
 				{
 					"name": "homoloss2"
-				},
-				{
-					"name": "awaywin"
 				},
 				{
 					"name": "homeloss"
@@ -73,15 +67,12 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     limit: 100,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 filter(home_team_result==\"Draw\") ~> homewin1",
 				"homewin1 aggregate(groupBy(home_team),",
-				"     homewincount = count(home_team)) ~> aggregate1",
-				"homewin1 aggregate(groupBy(away_team),",
-				"     awaywincount = count(away_team)) ~> aggregate2",
+				"     homewincount = count(home_team)) ~> aggregate2",
 				"source1 filter(home_team_result==\"Lose\") ~> homoloss2",
-				"homoloss2 aggregate(groupBy(away_team),",
-				"     total_win = count(away_team)) ~> awaywin",
 				"homoloss2 aggregate(groupBy(home_team),",
 				"     total_lose = count(home_team)) ~> homeloss",
 				"source1 filter(home_team_result==\"Draw\") ~> homedraw",
