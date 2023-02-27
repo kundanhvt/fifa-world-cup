@@ -9,14 +9,14 @@
 					{
 						"activity": "Data flow1",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Copy data1').output.pipelineReturnValue",
+						"value": "@activity('Data flow1').output.pipelineReturnValue",
 						"type": "Expression"
 					},
 					"batchCount": 1,
