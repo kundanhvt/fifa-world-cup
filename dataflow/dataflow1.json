@@ -40,6 +40,15 @@
 				},
 				{
 					"name": "awaydraw1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "finaldraw"
 				}
 			],
 			"scriptLines": [
@@ -77,9 +86,24 @@
 				"     total_lose = count(home_team)) ~> homeloss",
 				"source1 filter(home_team_result==\"Draw\") ~> homedraw",
 				"homedraw aggregate(groupBy(home_team),",
-				"     home_loss = count(home_team)) ~> homedraw1",
+				"     home_draw = count(home_team)) ~> homedraw1",
 				"homedraw aggregate(groupBy(away_team),",
-				"     away_draw = count(away_team)) ~> awaydraw1"
+				"     away_draw = count(away_team)) ~> awaydraw1",
+				"awaydraw1, homedraw1 join(away_team == home_team,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(total_draw = iif( isNull(home_draw), 0l , home_draw) + iif( isNull(away_draw), 0l , away_draw)) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          away_team,",
+				"          away_draw,",
+				"          final_draw = home_team,",
+				"          home_draw,",
+				"          total_draw",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> finaldraw"
 			]
 		}
 	}
