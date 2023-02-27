@@ -62,7 +62,7 @@
 				"     keys:['home_team'],",
 				"     store: 'cache',",
 				"     format: 'inline',",
-				"     output: false,",
+				"     output: true,",
 				"     saveOrder: 1,",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]

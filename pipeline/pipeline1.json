@@ -15,6 +15,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Data flow1').output",
+						"type": "Expression"
+					},
 					"batchCount": 1,
 					"activities": [
 						{
