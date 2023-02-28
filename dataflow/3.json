@@ -18,7 +18,7 @@
 						"referenceName": "3dataset",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink"
 				}
 			],
 			"transformations": [
@@ -86,7 +86,7 @@
 				"          home_team_result as string",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sink"
 			]
 		}
 	}
