@@ -43,7 +43,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Data flow1').output",
+						"value": "@activity('Data flow1').output.runStatus.output.sink1.value",
 						"type": "Expression"
 					},
 					"batchCount": 1,
