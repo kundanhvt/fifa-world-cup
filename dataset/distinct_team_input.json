@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "distinct_team.cvs",
+				"fileName": "distinct_team.csv",
 				"container": "middleware"
 			},
 			"columnDelimiter": ",",
