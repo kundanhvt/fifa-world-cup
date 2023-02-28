@@ -22,6 +22,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     home_team_name as string (\"India\")",
+				"}",
 				"source(output(",
 				"          date as string,",
 				"          home_team as string,",
@@ -45,7 +48,7 @@
 				"     validateSchema: false,",
 				"     limit: 25000,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 filter(home_team==\"India\") ~> filter1",
+				"source1 filter(home_team==$home_team_name) ~> filter1",
 				"filter1 select(mapColumn(",
 				"          date,",
 				"          home_team,",
