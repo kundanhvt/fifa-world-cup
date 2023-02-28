@@ -1,0 +1,59 @@
+{
+	"name": "3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "madhurinputdataset",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as short,",
+				"          away_team_fifa_rank as short,",
+				"          home_team_total_fifa_points as boolean,",
+				"          away_team_total_fifa_points as boolean,",
+				"          home_team_score as short,",
+				"          away_team_score as short,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as boolean,",
+				"          shoot_out as boolean,",
+				"          home_team_result as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     limit: 25000,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 filter(home_team==\"India\") ~> filter1",
+				"filter1 select(mapColumn(",
+				"          date,",
+				"          home_team,",
+				"          home_team_fifa_rank",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1"
+			]
+		}
+	}
+}

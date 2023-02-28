@@ -1,5 +1,5 @@
 {
-	"name": "dataflow3",
+	"name": "5",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -36,6 +36,12 @@
 				},
 				{
 					"name": "select1"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "filter3"
 				}
 			],
 			"scriptLines": [
@@ -62,9 +68,9 @@
 				"     validateSchema: false,",
 				"     limit: 25000,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 aggregate(groupBy(home_team),",
+				"filter3 aggregate(groupBy(home_team),",
 				"     total_played = count(home_team)) ~> aggregate2",
-				"source1 filter(home_team_result==\"Win\") ~> filter1",
+				"filter2 filter(home_team_result==\"Win\") ~> filter1",
 				"filter1 aggregate(groupBy(home_team),",
 				"     total_win = count(home_team)) ~> aggregate3",
 				"aggregate3, aggregate2 join(aggregate3@home_team == aggregate2@home_team,",
@@ -79,6 +85,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 filter(home_team==country) ~> filter2",
+				"source1 filter(home_team==country) ~> filter3",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
