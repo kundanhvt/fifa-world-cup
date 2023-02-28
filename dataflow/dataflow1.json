@@ -78,7 +78,7 @@
 				"          Column_16 as string,",
 				"          Column_17 as string",
 				"     ),",
-				"     partitionFileNames:[($team_name)],",
+				"     partitionFileNames:[(\"{#team_name}.csv\")],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"
