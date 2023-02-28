@@ -1,0 +1,23 @@
+{
+	"name": "distinct_team_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "kundan_storage_adf_linked_services",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "distinct_team.cvs",
+				"container": "middleware"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

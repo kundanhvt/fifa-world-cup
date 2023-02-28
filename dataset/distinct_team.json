@@ -1,0 +1,22 @@
+{
+	"name": "distinct_team",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "kundan_storage_adf_linked_services",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "middleware"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
