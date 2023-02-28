@@ -11,7 +11,8 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"container": "kundan"
-			}
+			},
+			"firstRowAsHeader": true
 		},
 		"schema": []
 	}
