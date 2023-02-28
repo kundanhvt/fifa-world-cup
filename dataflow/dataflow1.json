@@ -10,16 +10,29 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel1",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [
 				{
 					"name": "sink1"
+				},
+				{
+					"name": "sink2"
 				}
 			],
 			"transformations": [
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "filter2"
 				}
 			],
 			"scriptLines": [
@@ -48,13 +61,41 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
 				"source1 filter(home_team == $team_name,",
 				"     partitionBy('hash', 1)) ~> filter1",
+				"source2 filter(home_team == $team_name) ~> filter2",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1"
+				"     partitionBy('hash', 1)) ~> sink1",
+				"filter2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1) ~> sink2"
 			]
 		}
 	}

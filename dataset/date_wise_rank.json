@@ -1,0 +1,91 @@
+{
+	"name": "date_wise_rank",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "kundan_storage_adf_linked_services",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "kundan"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "08-09-1993",
+				"type": "String"
+			},
+			{
+				"name": "Albania1",
+				"type": "String"
+			},
+			{
+				"name": "Denmark",
+				"type": "String"
+			},
+			{
+				"name": "Europe3",
+				"type": "String"
+			},
+			{
+				"name": "Europe4",
+				"type": "String"
+			},
+			{
+				"name": "92",
+				"type": "String"
+			},
+			{
+				"name": "10",
+				"type": "String"
+			},
+			{
+				"name": "07",
+				"type": "String"
+			},
+			{
+				"name": "08",
+				"type": "String"
+			},
+			{
+				"name": "09",
+				"type": "String"
+			},
+			{
+				"name": "1",
+				"type": "String"
+			},
+			{
+				"name": "FIFA World Cup qualification",
+				"type": "String"
+			},
+			{
+				"name": "Tirana",
+				"type": "String"
+			},
+			{
+				"name": "Albania13",
+				"type": "String"
+			},
+			{
+				"name": "FALSE",
+				"type": "String"
+			},
+			{
+				"name": "No",
+				"type": "String"
+			},
+			{
+				"name": "Lose",
+				"type": "String"
+			}
+		]
+	}
+}

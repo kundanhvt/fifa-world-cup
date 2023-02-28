@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "demo",
+						"referenceName": "fifa_data_input",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -14,24 +14,81 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "date_wise_rank",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "pivot1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
-				"          home_team as string",
+				"          date as string,",
+				"          home_team as string,",
+				"          away_team as string,",
+				"          home_team_continent as string,",
+				"          away_team_continent as string,",
+				"          home_team_fifa_rank as string,",
+				"          away_team_fifa_rank as string,",
+				"          home_team_total_fifa_points as string,",
+				"          away_team_total_fifa_points as string,",
+				"          home_team_score as string,",
+				"          away_team_score as string,",
+				"          tournament as string,",
+				"          city as string,",
+				"          country as string,",
+				"          neutral_location as string,",
+				"          shoot_out as string,",
+				"          home_team_result as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 sink(validateSchema: false,",
+				"source1 select(mapColumn(",
+				"          date,",
+				"          home_team,",
+				"          home_team_fifa_rank",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 pivot(groupBy(home_team),",
+				"     pivotBy(date),",
+				"     {} = toString(reduce(collect(home_team_fifa_rank),\"\",#item+ ''+#acc,#result)),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot1",
+				"pivot1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {08-09-1993} as string,",
+				"          Albania1 as string,",
+				"          Denmark as string,",
+				"          Europe3 as string,",
+				"          Europe4 as string,",
+				"          {92} as string,",
+				"          {10} as string,",
+				"          {07} as string,",
+				"          {08} as string,",
+				"          {09} as string,",
+				"          {1} as string,",
+				"          {FIFA World Cup qualification} as string,",
+				"          Tirana as string,",
+				"          Albania13 as string,",
+				"          FALSE as string,",
+				"          No as string,",
+				"          Lose as string",
+				"     ),",
+				"     partitionFileNames:['team_rank.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     store: 'cache',",
-				"     format: 'inline',",
-				"     output: true,",
-				"     saveOrder: 1) ~> sink1"
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
